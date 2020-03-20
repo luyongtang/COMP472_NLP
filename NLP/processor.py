@@ -6,7 +6,7 @@ class NBCModel:
         self.vocabulary = vocabulary_type
         self.size = size
         self.smooth_val = smooth_val
-        self.is_in_vocabulary = is_valid_char[vocabulary_type]
+        # self.is_in_vocabulary = sentenceparser.SentenceParser.is_valid_char[vocabulary_type]
         # create n-grams for all the six languages
         #self.basque = Counter()
         #self.catalan = Counter()
