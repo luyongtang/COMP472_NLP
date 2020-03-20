@@ -1,5 +1,5 @@
-import numpy as np
-from collections import Counter
+#import numpy as np
+#from collections import Counter
 
 
 def is_26_case_insensitive(character):
@@ -24,12 +24,12 @@ class NBCModel:
         self.smooth_val = smooth_val
         self.is_in_vocabulary = is_valid_char[vocabulary_type]
         # create n-grams for all the six languages
-        self.basque = Counter()
-        self.catalan = Counter()
-        self.galician = Counter()
-        self.spanish = Counter()
-        self.english = Counter()
-        self.portuguess = Counter()
+        #self.basque = Counter()
+        #self.catalan = Counter()
+        #self.galician = Counter()
+        #self.spanish = Counter()
+        #self.english = Counter()
+        #self.portuguess = Counter()
 
     def learn(self, tweets):
 
