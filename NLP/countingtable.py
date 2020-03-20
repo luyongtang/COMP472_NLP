@@ -1,5 +1,5 @@
 import copy
-class CountingTale:
+class CountingTable:
     def __init__(self,smoothing):
         self.init_languages = {"eu":0,"ca":0,"gl":0,"es":0,"en":0,"pt":0}
         self.smoothing=smoothing

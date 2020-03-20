@@ -1,7 +1,18 @@
 import pprint
-from NLP.countingtable import CountingTale
+from NLP.countingtable import CountingTable
+from NLP.sentenceparser import SentenceParser
+sentence = "abédd"
 
-countingtable = CountingTale(0.5)
+print(SentenceParser.is_valid_char_functions[0]("a"))
+
+sentenceParser = SentenceParser(1,2)
+
+chars = sentenceParser.parseSentence(sentence)
+print(chars)
+
+exit(0)
+
+countingtable = CountingTable(0)
 
 countingtable.addCount("abc","en")
 countingtable.addCount("abc","en")
