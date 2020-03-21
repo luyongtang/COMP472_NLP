@@ -16,7 +16,7 @@ class SentenceParser:
 
     def parseSentence(self,sentence):
         return self.breakSentence([],sentence)
-
+    #create the n-grams
     def breakSentence(self,charsCollector,sentence):
         if (len(sentence)<self.charCount):
             return charsCollector

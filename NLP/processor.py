@@ -1,19 +1,25 @@
-#import numpy as np
-#from collections import Counter
+from NLP.countingtable import CountingTable
+from NLP.sentenceparser import SentenceParser
 
 class NBCModel:
-    def __init__(self, vocabulary_type, size, smooth_val):
+    def __init__(self, vocabulary_type, ngram_size, smooth_val):
         self.vocabulary = vocabulary_type
-        self.size = size
+        self.ngram_size = ngram_size
         self.smooth_val = smooth_val
-        self.is_in_vocabulary = is_valid_char[vocabulary_type]
-        # create n-grams for all the six languages
-        #self.basque = Counter()
-        #self.catalan = Counter()
-        #self.galician = Counter()
-        #self.spanish = Counter()
-        #self.english = Counter()
-        #self.portuguess = Counter()
+        self.sentence_parser = SentenceParser(vocabulary_type,ngram_size)
+        self.counting_table = CountingTable(smooth_val)
+
+    def learnfromfile(self,textfile):
+        with open(textfile,'r') as tweets_file:
+            for tweet_line in tweets_file:
+                lang, tweet = self.extractLangAndTweet(tweet_line)
+                for charsSequence in self.sentence_parser.parseSentence(tweet):
+                    self.counting_table.addCount(charsSequence,lang)
+        pass
+
+    def extractLangAndTweet(self, tweet_line):
+        tweet_ = tweet_line.split("\t")
+        return tweet_[2],tweet_[3]
 
     def learn(self, tweets):
 
