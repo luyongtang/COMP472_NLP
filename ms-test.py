@@ -11,7 +11,7 @@ print("sample couting")
 pprint.pprint(nbcModel.counting_table.vocabulary_count)
 print()
 print("total count based on training set (added smoothing if applied)")
-pprint.pprint(nbcModel.counting_table.total_language_count)
+pprint.pprint(nbcModel.counting_table.total_language_count) 
 
 exit(0)
 

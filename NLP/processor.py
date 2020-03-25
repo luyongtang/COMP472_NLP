@@ -15,6 +15,7 @@ class NBCModel:
                 lang, tweet = self.extractLangAndTweet(tweet_line)
                 for charsSequence in self.sentence_parser.parseSentence(tweet):
                     self.counting_table.addCount(charsSequence,lang)
+        self.counting_table.addUnknownCount()
         pass
 
     def extractLangAndTweet(self, tweet_line):

@@ -1,5 +1,6 @@
 import copy
 class CountingTable:
+    
     def __init__(self,smoothing):
         self.init_languages = {"eu":0,"ca":0,"gl":0,"es":0,"en":0,"pt":0}
         self.smoothing=smoothing
@@ -8,14 +9,18 @@ class CountingTable:
     
     def addCount(self,chars,language):
         if (not self.charsCountExists(chars)):
-            self.createNewEntryCount(chars,language)
+            self.createNewEntryCount(chars)
         self.vocabulary_count[chars][language]+=1
         self.total_language_count[language]+=1
-    
+
+    #unknown count addition
+    def addUnknownCount(self):
+        self.createNewEntryCount("UNKNOWN")
+
     def charsCountExists(self,chars):
         return chars in self.vocabulary_count.keys()
     
-    def createNewEntryCount(self,chars,language):
+    def createNewEntryCount(self,chars):
         #apply smoothing
         init_count = copy.deepcopy(self.init_languages)
         self.addSmoothing(init_count)
@@ -29,5 +34,6 @@ class CountingTable:
 
     def getCount(self, chars, language):
         if (not self.charsCountExists(chars)):
+            #return smoothing or we can also return "UNKNOWN" from dict count, it is the same value
             return self.smoothing
         return self.vocabulary_count[chars][language]
