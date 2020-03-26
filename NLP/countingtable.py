@@ -6,6 +6,7 @@ class CountingTable:
         self.smoothing=smoothing
         self.vocabulary_count = {}
         self.total_language_count = copy.deepcopy(self.init_languages)
+        self.languages_sum_count = 0
     
     def addCount(self,chars,language):
         if (not self.charsCountExists(chars)):
@@ -20,6 +21,11 @@ class CountingTable:
     def charsCountExists(self,chars):
         return chars in self.vocabulary_count.keys()
     
+    def updateLanguageSumCount(self):
+        self.languages_sum_count = 0
+        for key in self.total_language_count:
+            self.languages_sum_count += self.total_language_count[key]
+
     def createNewEntryCount(self,chars):
         #apply smoothing
         init_count = copy.deepcopy(self.init_languages)
