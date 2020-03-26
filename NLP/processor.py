@@ -25,7 +25,8 @@ class NBCModel:
         return tweet_[2],tweet_[3]
 
     def classify(self, sentence):
-        print("classify lang:")
+        print()
+        print("classify sentence:")
         print(sentence)
         charsSequenceSet = self.sentence_parser.parseSentence(sentence)
         best_score = None
