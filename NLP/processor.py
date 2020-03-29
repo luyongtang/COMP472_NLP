@@ -74,20 +74,50 @@ class NBCModel:
         pass
 
     def predict(self, file):
-        output = ""
+        trace_output = ""
         double_space = "  "
+        tweet_count = 0
+        correct_count = 0
         with open(file, 'r', encoding="utf8") as tweets_file:
             for tweet_line in tweets_file:
+                tweet_count += 1
                 lang, tweet, tweet_id = self.extractLangAndTweet(tweet_line)
                 res, score = self.classify(tweet)
-                compare = "correct" if res == lang else "wrong"
-                output = output + tweet_id + double_space + res + double_space + score + double_space + lang + \
-                    double_space + compare + "\n"
-        self.generate_trace(output)
+                compare = "wrong"
+                self.counting_table.process_eval_data(lang, res)
+                if res == lang:
+                    compare = "correct"
+                    correct_count += 1
+                trace_output = trace_output + tweet_id + double_space + res + double_space + score + double_space + lang + \
+                               double_space + compare + "\n"
+        accuracy = correct_count / tweet_count
+        print("accuracy: ", accuracy)
+        self.generate_trace(trace_output)
+        self.counting_table.calculate_eval(tweet_count)
+        self.generate_eval(accuracy)
 
     def generate_trace(self, contents):
         file_name = "./output/trace_" + str(self.vocabulary) + "_" + str(self.ngram_size) + "_" + str(
             self.smooth_val) + ".txt"
         out_file = open(file_name, "w")
         out_file.writelines(contents)
+        out_file.close()
+
+    def generate_eval(self, accuracy):
+        eval_output = str(accuracy) + "\n"
+        precisions = ""
+        recalls = ""
+        f1_measures = ""
+        for key in self.counting_table.precision_per_class.keys():
+            precisions += str(self.counting_table.precision_per_class[key]) + "  "
+            recalls += str(self.counting_table.recall_per_class[key]) + "  "
+            f1_measures += str(self.counting_table.f1_measure[key]) + "  "
+        pass
+        eval_output += precisions.rstrip() + "\n" + recalls.rstrip() + "\n" + f1_measures.rstrip() + "\n" + str(
+            self.counting_table.marco_f1) + "  " + str(self.counting_table.weighted_average_f1)
+        print(eval_output)
+        file_name = "./output/eval_" + str(self.vocabulary) + "_" + str(self.ngram_size) + "_" + str(
+            self.smooth_val) + ".txt"
+        out_file = open(file_name, "w")
+        out_file.writelines(eval_output)
         out_file.close()
