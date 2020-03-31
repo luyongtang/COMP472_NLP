@@ -15,7 +15,8 @@ class NBCModel:
     def learnfromfile(self, textfile):
         with open(textfile, 'r', encoding="utf8") as tweets_file:
             for tweet_line in tweets_file:
-                lang, tweet, tweet_id = self.extractLangAndTweet(tweet_line)
+                formatted_tweet_line = tweet_line.lower() if self.vocabulary == 0 else tweet_line
+                lang, tweet, tweet_id = self.extractLangAndTweet(formatted_tweet_line)
                 for charsSequence in self.sentence_parser.parseSentence(tweet):
                     self.counting_table.addCount(charsSequence, lang)
         self.counting_table.addUnknownCount()
