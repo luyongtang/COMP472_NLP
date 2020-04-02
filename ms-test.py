@@ -3,7 +3,7 @@ from NLP.countingtable import CountingTable
 from NLP.sentenceparser import SentenceParser
 from NLP.processor import NBCModel
 
-nbcModel = NBCModel(1,2,0.5)
+nbcModel = NBCModel(0,3,0.2)
 print("training...")
 nbcModel.learnfromfile("data/training-tweets.txt")
 print("completed")
