@@ -36,16 +36,16 @@ class NBCModel:
         return tweet_[0], tweet_[3]
 
     def classify(self, sentence):
-        print()
-        print("classify sentence:")
-        print(sentence)
+        # print()
+        # print("classify sentence:")
+        # print(sentence)
         charsSequenceSet = self.sentence_parser.parseSentence(sentence)
         best_score = None
         best_score_lang = None
-        print("scores:")
+        # print("scores:")
         for key_lang in self.counting_table.init_languages:
             score_ = self.score(charsSequenceSet, key_lang)
-            print(key_lang, score_)
+            # print(key_lang, score_)
             if best_score is None or score_ > best_score:
                 best_score = score_
                 best_score_lang = key_lang
