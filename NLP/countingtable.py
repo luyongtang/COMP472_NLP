@@ -8,6 +8,9 @@ class CountingTable:
         self.vocabulary_count = {}
         self.total_language_count = copy.deepcopy(self.init_languages)
         self.languages_sum_count = 0
+        self.tweets_per_class = {"eu": 0, "ca": 0, "gl": 0, "es": 0, "en": 0, "pt": 0}
+        self.prior_probabilities = {"eu": 0.0, "ca": 0.0, "gl": 0.0, "es": 0.0, "en": 0.0, "pt": 0.0}
+        self.words_per_class = {"eu": 0.0, "ca": 0.0, "gl": 0.0, "es": 0.0, "en": 0.0, "pt": 0.0}
 
         # for evaluation
         self.fp_count = copy.deepcopy(self.init_languages)
@@ -42,7 +45,7 @@ class CountingTable:
         #apply smoothing
         init_count = copy.deepcopy(self.init_languages)
         self.addSmoothing(init_count)
-        self.addSmoothing(self.total_language_count)
+        # self.addSmoothing(self.total_language_count)
         self.vocabulary_count[chars] = init_count
         pass
 
@@ -71,8 +74,11 @@ class CountingTable:
         labelled = copy.deepcopy(self.init_languages)
         for key in labelled.keys():
             labelled[key] = self.fp_count[key] + self.tp_count[key]
+            if labelled[key] == 0:
+                print("labelled is 0: ", key)
         for key in self.precision_per_class.keys():
-            self.precision_per_class[key] = self.tp_count[key] / labelled[key]
+            # self.precision_per_class[key] = self.tp_count[key] / labelled[key]
+            self.precision_per_class[key] = 0 if labelled[key] == 0 else self.tp_count[key] / labelled[key]
         print("Labelled: ", labelled)
         print("Precision: ", self.precision_per_class)
 
