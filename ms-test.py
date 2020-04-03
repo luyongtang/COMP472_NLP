@@ -3,7 +3,7 @@ from NLP.countingtable import CountingTable
 from NLP.sentenceparser import SentenceParser
 from NLP.processor import NBCModel
 
-nbcModel = NBCModel(2,3,1)
+nbcModel = NBCModel(2,3,0.004)
 print("training...")
 nbcModel.learnfromfile("data/training-tweets.txt")
 print("completed")
@@ -12,7 +12,7 @@ print()
 print("total count based on training set (added smoothing if applied)")
 pprint.pprint(nbcModel.counting_table.total_language_count)
 print("sum of all counts (all language):", nbcModel.counting_table.languages_sum_count)
-pprint.pprint(nbcModel.counting_table.vocabulary_count)
+# pprint.pprint(nbcModel.counting_table.vocabulary_count)
 print("tweets_per_class:")
 pprint.pprint(nbcModel.counting_table.tweets_per_class)
 print()
