@@ -1,32 +1,16 @@
 import pprint
 from NLP.countingtable import CountingTable
 from NLP.sentenceparser import SentenceParser
-sentence = "abédd"
+from NLP.nbcmodel import NBCModel
 
-print(SentenceParser.is_valid_char_functions[0]("a"))
-
-sentenceParser = SentenceParser(1,2)
-
-chars = sentenceParser.parseSentence(sentence)
-print(chars)
-
-exit(0)
-
-countingtable = CountingTable(0)
-
-countingtable.addCount("abc","en")
-countingtable.addCount("abc","en")
-countingtable.addCount("abc","en")
-countingtable.addCount("abc","en")
-countingtable.addCount("abc","en")
-countingtable.addCount("abc","en")
-countingtable.addCount("abc","en")
-countingtable.addCount("abd","gl")
-countingtable.addCount("hfg","en")
-print("sample couting")
-pprint.pprint(countingtable.vocabulary_count)
+nbcModel = NBCModel(0,3,0.099)
+print("training...")
+nbcModel.learnFromFile("data/training-tweets.txt")
+print("completed")
+# pprint.pprint(nbcModel.counting_table.vocabulary_count)
+print("tweets_per_class:")
+pprint.pprint(nbcModel.counting_table.tweets_per_class)
 print()
-print("total count based on training set (added smoothing if applied)")
-pprint.pprint(countingtable.total_language_count)
-
-print(countingtable.getCount("abc","en"))
+# print("classification:",nbcModel.classify("Ba dena aprobatzeko etxen geitubehar... ta eualdi honek re ezto launtzen... @AmaiaAuza"))
+# print("classification:",nbcModel.classify("Allen Iverson getting his number retired today! Just wish he could have got that ring in The Finals #TheAnswer #76ers http://t.co/vOgEnLfdKq"))
+nbcModel.predictFromFile("data/test-tweets-given.txt")
