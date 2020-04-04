@@ -1,12 +1,13 @@
+import re
 class SentenceParser:
     def is_26_case_insensitive(character):
-        return 97 <= ord(character) <= 122
+        return 97 <= ord(character) <= 122 or character is " " or character is "_"
 
     def is_52_case_sensitive(character):
-        return 65 <= ord(character) <= 90 or 97 <= ord(character) <= 122
+        return 65 <= ord(character) <= 90 or 97 <= ord(character) <= 122 or character is " " or character is "_"
 
     def is_expanded_characters(character):
-        return 65 <= ord(character) <= 90 or 97 <= ord(character) <= 122 or character.isalpha()
+        return 65 <= ord(character) <= 90 or 97 <= ord(character) <= 122 or character.isalpha() or character is " " or character is "_"
         
     is_valid_char_functions = [is_26_case_insensitive, is_52_case_sensitive, is_expanded_characters]
 
@@ -14,7 +15,13 @@ class SentenceParser:
         self.isValidChar = SentenceParser.is_valid_char_functions[vocabulary_index]
         self.charCount = charCount
 
-    def parseSentence(self,sentence):
+    def parseSentence(self,sentence, addBegEnd):
+        sentence = re.sub(r'@(\w*|_)',"",sentence)
+        sentence = re.sub(r'#(\w*|_)',"",sentence)
+        sentence = re.sub(r'http(s)?://(\w|\.|/)*',"",sentence)
+        sentence = re.sub(r'\s{2,}'," ",sentence)
+        if addBegEnd:
+            sentence = "_"+sentence+"_"
         return self.breakSentence([],sentence)
     #create the n-grams
     def breakSentence(self,charsCollector,sentence):
