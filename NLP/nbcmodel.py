@@ -14,7 +14,7 @@ class NBCModel:
         self.smooth_val = smooth_val
         self.evaluator = Evaluation(vocabulary_type)
         # creating n-grams, (break tweet into chars)
-        self.sentence_parser = SentenceParser(vocabulary_type, ngram_size)
+        self.sentence_parser = SentenceParser(vocabulary_type, ngram_size, False)
         # couting n-grams per class with related functions
         self.counting_table = CountingTable(smooth_val)
         # for V=0,V=1,V=2

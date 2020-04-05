@@ -1,7 +1,7 @@
 import pprint
 from NLP.bigramlanguagemodel import BigramLanguageLodel
 
-bigram = BigramLanguageLodel(2,11)
+bigram = BigramLanguageLodel(2,10,0.5)
 
 bigram.learnFromFile("data/training-tweets.txt")
 print(len(bigram.counting_tables["en"].init_characters_set_count))

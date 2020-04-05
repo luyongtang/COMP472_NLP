@@ -1,28 +1,45 @@
 import re
 class SentenceParser:
-    def is_26_case_insensitive(character):
-        return 97 <= ord(character) <= 122 or character is " " or character is "_"
+    # isSpecialCharacter used for bigram language model, for NB model it will alway return false
+    def is_26_case_insensitive(self, character):
+        return 97 <= ord(character) <= 122 or self.isSpecialCharacter(character)
 
-    def is_52_case_sensitive(character):
-        return 65 <= ord(character) <= 90 or 97 <= ord(character) <= 122 or character is " " or character is "_"
+    def is_52_case_sensitive(self, character):
+        return 65 <= ord(character) <= 90 or 97 <= ord(character) <= 122 or self.isSpecialCharacter(character)
 
-    def is_expanded_characters(character):
-        return 65 <= ord(character) <= 90 or 97 <= ord(character) <= 122 or character.isalpha() or character is " " or character is "_"
-        
-    is_valid_char_functions = [is_26_case_insensitive, is_52_case_sensitive, is_expanded_characters]
+    def is_expanded_characters(self, character):
+        return 65 <= ord(character) <= 90 or 97 <= ord(character) <= 122 or character.isalpha() or self.isSpecialCharacter(character)
 
-    def __init__(self, vocabulary_index, charCount):
-        self.isValidChar = SentenceParser.is_valid_char_functions[vocabulary_index]
+    def __init__(self, vocabulary_index, charCount, captureBegEnd):
+        self.is_valid_char_functions = [self.is_26_case_insensitive, self.is_52_case_sensitive, self.is_expanded_characters]
+        self.isValidChar = self.is_valid_char_functions[vocabulary_index]
         self.charCount = charCount
+        self.captureBegEnd = captureBegEnd
+        # include special characters, used for bigram language model
+        self.specialCharacters = []
 
-    def parseSentence(self,sentence, addBegEnd):
-        sentence = re.sub(r'@(\w*|_)',"",sentence)
-        sentence = re.sub(r'#(\w*|_)',"",sentence)
-        sentence = re.sub(r'http(s)?://(\w|\.|/)*',"",sentence)
-        sentence = re.sub(r'\s{2,}'," ",sentence)
-        if addBegEnd:
-            sentence = "_"+sentence+"_"
+    def includeSpecialCharacter(self, char):
+        self.specialCharacters.append(char)
+    
+    def isSpecialCharacter(self, char):
+        return char in self.specialCharacters
+
+    def parseSentence(self,sentence):
+        sentence = self.preProcess(sentence)
         return self.breakSentence([],sentence)
+    
+    def preProcess(self, sentence):
+        # remove tweet mentions
+        sentence = re.sub(r'@(\w*|_)',"",sentence)
+        # remove hashtag mentions
+        sentence = re.sub(r'#(\w*|_)',"",sentence)
+        # remove links
+        sentence = re.sub(r'http(s)?://(\w|\.|/)*',"",sentence)
+        # replace consecutive spaces by one space
+        sentence = re.sub(r'\s{2,}'," ",sentence)
+        # identify beginning and ending of sentence, used for bigram language model
+        return "_"+sentence+"_" if self.captureBegEnd else sentence 
+
     #create the n-grams
     def breakSentence(self,charsCollector,sentence):
         if (len(sentence)<self.charCount):
@@ -30,7 +47,7 @@ class SentenceParser:
         index = 0
         validCharsSequence = True
         while(validCharsSequence and index<self.charCount):
-            validCharsSequence = validCharsSequence and self.isValidChar( sentence[index])
+            validCharsSequence = validCharsSequence and self.isValidChar(sentence[index])
             index+=1
         if validCharsSequence:
             charsCollector.append(sentence[:self.charCount])

@@ -3,14 +3,16 @@ from NLP.sentenceparser import SentenceParser
 from NLP.evaluation import Evaluation
 from decimal import Decimal
 import math
-class BigramLanguageLodel:
-    def __init__(self, vocabulary_type,smooth_val):
+class BigramLanguageModel:
+    def __init__(self, vocabulary_type, penality_weight, smooth_val):
         self.vocabulary_type = vocabulary_type
         # characters only
         self.ngram_size = 1
+        self.penality_weight = penality_weight
         # creating n-grams, (break tweet into chars)
-        self.character_parser = SentenceParser(vocabulary_type, 1)
-        self.bigram_parser = SentenceParser(vocabulary_type, 2)
+        self.character_parser = SentenceParser(vocabulary_type, 2, True)
+        self.bigram_parser = SentenceParser(vocabulary_type, 4, True)
+        self.addSpecialCharacterToParsers()
         self.smooth_val = smooth_val
         self.is_vocab_0 = vocabulary_type is 0
         self.evaluator = Evaluation(vocabulary_type)
@@ -22,16 +24,24 @@ class BigramLanguageLodel:
             "en":LanguageCountingTable(smooth_val),
             "pt":LanguageCountingTable(smooth_val)
         }
+    
+    def addSpecialCharacterToParsers(self):
+        # include space char in vocab
+        self.character_parser.includeSpecialCharacter(" ")
+        self.bigram_parser.includeSpecialCharacter(" ")
+        # include underscore to identify beginning and ending sentence
+        self.character_parser.includeSpecialCharacter("_")
+        self.bigram_parser.includeSpecialCharacter("_")
+
     def learnFromFile(self, textfile):
         with open(textfile, 'r', encoding="utf8") as tweets_file:
             for tweet_line in tweets_file:
                 lang, tweet, tweet_id = self.extractLangAndTweet(tweet_line)
                 # to lower case when vocab is 0
                 tweet = tweet.lower() if self.is_vocab_0 else tweet
-                for char in self.character_parser.parseSentence(tweet, False):
+                for char in self.character_parser.parseSentence(tweet):
                     self.counting_tables[lang].addToCharSet(char)
-                self.counting_tables[lang].addToCharSet("_")
-                for bigram in self.bigram_parser.parseSentence(tweet, True):
+                for bigram in self.bigram_parser.parseSentence(tweet):
                     self.counting_tables[lang].addToBigramList(bigram)
 
         for lang in self.counting_tables:
@@ -39,7 +49,7 @@ class BigramLanguageLodel:
             self.counting_tables[lang].calculateProbabilityPerRow()
     
     def classify(self, sentence):
-        bigram_list = self.bigram_parser.parseSentence(sentence, True)
+        bigram_list = self.bigram_parser.parseSentence(sentence)
         best_score = None
         best_score_lang = None
         for lang in self.counting_tables:
@@ -53,15 +63,14 @@ class BigramLanguageLodel:
     def score(self, bigram_list, lang):
         total_score = 0
         for bigram in bigram_list:
-            # if bigram not part of bigram table, the score is zero
+            # if bigram not part of bigram table, the score receives a penality
             if self.counting_tables[lang].bigramExists(bigram):
                 bigram_prob = self.counting_tables[lang].getProbability(bigram)
                 if bigram_prob != 0:
                     total_score += math.log( bigram_prob )
             else:
-                #print("no exists in ", lang, bigram)
-                total_score -=10
-
+                total_score -=self.penality_weight
+                pass
         return total_score
 
     def extractLangAndTweet(self, tweet_line):

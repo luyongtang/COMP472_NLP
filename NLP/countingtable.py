@@ -27,7 +27,7 @@ class CountingTable:
             tweets_total += self.tweets_per_class[lan]
         for lan in self.tweets_per_class.keys():
             self.prior_probabilities[lan] = self.tweets_per_class[lan] / tweets_total
-        print("prior: ", self.prior_probabilities)
+        #print("prior: ", self.prior_probabilities)
         pass
 
     def charsCountExists(self,chars):
@@ -50,7 +50,7 @@ class CountingTable:
         combinations_count = pow(vocab_size, ngram_size)
         for lan in self.smoothed_ngram_per_class.keys():
             self.smoothed_ngram_per_class[lan] = self.ngram_count_per_class[lan] + combinations_count * self.smoothing
-        print("smoothed_ngram_per_class(after smoothing): ", self.smoothed_ngram_per_class)
+        #print("smoothed_ngram_per_class(after smoothing): ", self.smoothed_ngram_per_class)
         pass
 
     def getNGramCount(self, chars, language):

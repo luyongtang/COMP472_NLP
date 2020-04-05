@@ -31,26 +31,26 @@ class LanguageCountingTable:
     def addToTable(self, bigram):
         if (not self.charExists(bigram)):
             self.addNewBigram(bigram)
-        current_char = bigram[0]
-        succeeding_char = bigram[1]
+        current_char = bigram[0:2]
+        succeeding_char = bigram[2:4]
         self.language_table[current_char][succeeding_char]+=1
     
     def charExists(self,bigram):
-        return bigram[0] in self.language_table.keys()
+        return bigram[0:2] in self.language_table.keys()
     
     def bigramExists(self, bigram):
         try:
-            self.language_table[bigram[0]][bigram[1]]
+            self.language_table[bigram[0:2]][bigram[2:4]]
             return True
         except KeyError:
             return False
     
     def getProbability(self, bigram):
-        return self.language_table[bigram[0]][bigram[1]]
+        return self.language_table[bigram[0:2]][bigram[2:4]]
     
     def addNewBigram(self, bigram):
         row = copy.deepcopy(self.init_characters_set_count)
-        self.language_table[bigram[0]]=row
+        self.language_table[bigram[0:2]]=row
         
 
     
