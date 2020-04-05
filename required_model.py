@@ -12,7 +12,7 @@ smoothing_value = sys.argv[3]
 
 training_filepath = "data/training-tweets.txt"
 testing_filepath = "data/test-tweets-given.txt"
-model = NBCModel(int(vocabulary), int(n), Decimal(smoothing_value))
+model = NBCModel(int(vocabulary), int(n), float(smoothing_value))
 print("\n--------Training NBC Model--------")
 model.learnFromFile(training_filepath)
 print("\n--------Predicting From Test File--------")
