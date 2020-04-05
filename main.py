@@ -5,14 +5,14 @@ from NLP.bigramlanguagemodel import BigramLanguageModel
 # python main.py bl data/training-tweets.txt data/test-tweets-given.txt
 
 # nb, naive bayes: V, n-gram size, smoothing
-# bl, bigram language: V, penality weight, smoothing
+# bl, bigram language: V, penalty weight, smoothing
 models = {
     'nb': NBCModel(0,3,0.099),
     'bl': BigramLanguageModel(2,10,0.5)
 }
 
 if len(sys.argv) <= 3:
-    print("missing arguemnts: main.py nb|bg training_filepath testing_filepath")
+    print("missing arguments: main.py nb|bl training_filepath testing_filepath")
     exit()
 
 if not sys.argv[1] in models:

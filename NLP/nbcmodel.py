@@ -57,7 +57,7 @@ class NBCModel:
         for charsSequence in charsSequenceSet:
             conditional_probability_score = self.charSequenceLanguageCP(charsSequence, language)
             if conditional_probability_score == 0:
-                print(charsSequence, "  's conditional is 0!")
+                # print(charsSequence, "  's conditional is 0!")
                 continue
             score_sum += math.log(conditional_probability_score)
         return score_sum
@@ -97,7 +97,7 @@ class NBCModel:
         self.generate_eval(accuracy)
 
     def generate_trace(self, contents):
-        file_name = "./output/trace_" + str(self.vocabulary) + "_" + str(self.ngram_size) + "_" + str(
+        file_name = "./required_output/trace_" + str(self.vocabulary) + "_" + str(self.ngram_size) + "_" + str(
             self.smooth_val) + ".txt"
         out_file = open(file_name, "w")
         out_file.writelines(contents)
@@ -116,7 +116,7 @@ class NBCModel:
         eval_output += precisions.rstrip() + "\n" + recalls.rstrip() + "\n" + f1_measures.rstrip() + "\n" + str(
             self.evaluator.marco_f1) + "  " + str(self.evaluator.weighted_average_f1)
         # print(eval_output)
-        file_name = "./output/eval_" + str(self.vocabulary) + "_" + str(self.ngram_size) + "_" + str(
+        file_name = "./required_output/eval_" + str(self.vocabulary) + "_" + str(self.ngram_size) + "_" + str(
             self.smooth_val) + ".txt"
         out_file = open(file_name, "w")
         out_file.writelines(eval_output)

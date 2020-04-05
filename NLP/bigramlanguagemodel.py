@@ -4,11 +4,11 @@ from NLP.evaluation import Evaluation
 from decimal import Decimal
 import math
 class BigramLanguageModel:
-    def __init__(self, vocabulary_type, penality_weight, smooth_val):
+    def __init__(self, vocabulary_type, penalty_weight, smooth_val):
         self.vocabulary_type = vocabulary_type
         # characters only
         self.ngram_size = 1
-        self.penality_weight = penality_weight
+        self.penalty_weight = penalty_weight
         # creating n-grams, (break tweet into chars)
         self.character_parser = SentenceParser(vocabulary_type, 2, True)
         self.bigram_parser = SentenceParser(vocabulary_type, 4, True)
@@ -63,13 +63,13 @@ class BigramLanguageModel:
     def score(self, bigram_list, lang):
         total_score = 0
         for bigram in bigram_list:
-            # if bigram not part of bigram table, the score receives a penality
+            # if bigram not part of bigram table, the score receives a penalty
             if self.counting_tables[lang].bigramExists(bigram):
                 bigram_prob = self.counting_tables[lang].getProbability(bigram)
                 if bigram_prob != 0:
                     total_score += math.log( bigram_prob )
             else:
-                total_score -=self.penality_weight
+                total_score -= self.penalty_weight
                 pass
         return total_score
 
@@ -103,8 +103,8 @@ class BigramLanguageModel:
         self.generate_eval(accuracy)
 
     def generate_trace(self, contents):
-        file_name = "./output/trace_" + str(self.vocabulary_type) + "_" + str(self.ngram_size) + "_" + str(
-            self.smooth_val) + ".txt"
+        file_name = "./byom_output/trace_" + str(self.vocabulary_type) + "_" + str(self.ngram_size) + "_" + str(
+            self.smooth_val) + "_" + str(self.penalty_weight) + ".txt"
         out_file = open(file_name, "w")
         out_file.writelines(contents)
         out_file.close()
@@ -122,8 +122,8 @@ class BigramLanguageModel:
         eval_output += precisions.rstrip() + "\n" + recalls.rstrip() + "\n" + f1_measures.rstrip() + "\n" + str(
             self.evaluator.marco_f1) + "  " + str(self.evaluator.weighted_average_f1)
         # print(eval_output)
-        file_name = "./output/eval_" + str(self.vocabulary_type) + "_" + str(self.ngram_size) + "_" + str(
-            self.smooth_val) + ".txt"
+        file_name = "./byom_output/eval_" + str(self.vocabulary_type) + "_" + str(self.ngram_size) + "_" + str(
+            self.smooth_val) + "_" + str(self.penalty_weight) + ".txt"
         out_file = open(file_name, "w")
         out_file.writelines(eval_output)
         out_file.close()
